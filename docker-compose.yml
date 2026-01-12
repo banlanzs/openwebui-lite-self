@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      # 精简版默认关闭不必要的重量功能，可按需调整
+      CORS_ALLOW_ORIGIN: "http://localhost:5173"
+      ENABLE_WEB_SEARCH: "false"
+      BYPASS_EMBEDDING_AND_RETRIEVAL: "true"
+      ENABLE_OLLAMA_API: "false"
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    depends_on:
+      - backend
+    environment:
+      APP_BUILD_HASH: "docker-dev"
+    ports:
+      - "5173:5173"
