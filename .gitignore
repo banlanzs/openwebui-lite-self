@@ -316,3 +316,6 @@ tmpclaude-*
 
 # Temporary error logs
 error.md
+
+# Docker volume data (persistent storage)
+data/

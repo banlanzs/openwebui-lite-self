@@ -14,6 +14,9 @@ services:
       NO_PROXY: "localhost,127.0.0.1,172.0.0.0/8,.docker.internal"
     ports:
       - "8080:8080"
+    volumes:
+      # 持久化数据库和配置文件，防止容器重建后数据丢失
+      - ./data:/app/backend/data
 
   frontend:
     build:
