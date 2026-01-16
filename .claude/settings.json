@@ -1,0 +1,32 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'INPUT=$(cat); FILE=$(echo \"$INPUT\" | jq -r \".tool_input.file_path // empty\"); [ -n \"$FILE\" ] && git add \"$FILE\" 2>/dev/null || true'"
+          }
+        ],
+        "matcher": "Write"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'mkdir -p \"$HOME/.claude\"; INPUT=$(cat); TOOL=$(echo \"$INPUT\" | jq -r \".tool_name // empty\" 2>/dev/null); FILE=$(echo \"$INPUT\" | jq -r \".tool_input.file_path // .tool_input.path // empty\" 2>/dev/null); echo \"[$(date)] Tool: $TOOL, File: $FILE\" >> \"$HOME/.claude/tool-usage.log\"'"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'INPUT=$(cat); FILE_PATH=$(echo \"$INPUT\" | jq -r \".tool_input.file_path // .tool_input.path // empty\"); [ -n \"$FILE_PATH\" ] && curl -s -X POST -H \"Content-Type: application/json\" -d \"{\\\"type\\\":\\\"file_written\\\",\\\"filePath\\\":\\\"$FILE_PATH\\\"}\" http://localhost:3456/api/hook || true'"
+          }
+        ],
+        "matcher": "Write"
+      }
+    ]
+  }
+}
